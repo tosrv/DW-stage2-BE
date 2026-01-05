@@ -37,7 +37,7 @@ export const deletePost = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const index = posts.findIndex((p) => p.id === id);
 
-  if (!index) {
+  if (index === -1) {
     return res.status(400).json({ message: "Post not found" });
   }
 
