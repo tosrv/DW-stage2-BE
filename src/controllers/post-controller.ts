@@ -25,7 +25,7 @@ export const updatePost = (req: Request, res: Response) => {
   const { title, content } = req.body;
   const post = posts.find((p) => p.id === id);
 
-  if (!post) return res.status(400).json({ message: "Post not found" });
+  if (!post) return res.status(404).json({ message: "Post not found" });
   if (title !== undefined) post.title = title;
   if (content !== undefined) post.content = content;
 
@@ -38,7 +38,7 @@ export const deletePost = (req: Request, res: Response) => {
   const index = posts.findIndex((p) => p.id === id);
 
   if (index === -1) {
-    return res.status(400).json({ message: "Post not found" });
+    return res.status(404).json({ message: "Post not found" });
   }
 
   posts.splice(index, 1);
