@@ -6,7 +6,7 @@ export interface Order {
 }
 
 // Order Data Dummy
-export const cart: Order[] = [
+export const orders: Order[] = [
   {
     id: 1,
     quantity: 10,
