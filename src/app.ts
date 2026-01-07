@@ -8,8 +8,8 @@ const app = express();
 app.use(json());
 
 // Routes
-app.use("/api/v1/posts", postRoutes);
-app.use("/api/v1/users", usersRoutes);
+app.use("/api/v1", postRoutes);
+app.use("/api/v1", usersRoutes);
 
 // Run Server
 app.listen(process.env.PORT, () => {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../connection/client";
+import { prisma } from "../prisma/client";
 
 // Display All Users
 export const getUsers = async (req: Request, res: Response) => {
