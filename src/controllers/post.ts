@@ -13,7 +13,8 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
 // Filter Posts
 export const getPosts = async (req: Request, res: Response) => {
-  const categoryId = req.query;
+  const { categoryId } = req.query;
+
   try {
     const posts = await prisma.post.findMany({
       where: {
@@ -80,10 +81,10 @@ export const commentsSummary = async (req: Request, res: Response) => {
     const comments = await prisma.comment.groupBy({
       by: ["postId"],
       _count: { id: true },
-      having: { id: { _count: {gte: Number(commentCount)}}},
+      having: { id: { _count: { gte: Number(commentCount) } } },
       orderBy: { _count: { id: order as "asc" | "desc" } },
       take: Number(limit),
-      skip: Number(offset)
+      skip: Number(offset),
     });
     res
       .status(200)
