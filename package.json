@@ -1,5 +1,5 @@
 {
-  "name": "send-poin-user",
+  "name": "store",
   "version": "1.0.0",
   "description": "",
   "main": "src/app.ts",

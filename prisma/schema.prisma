@@ -9,8 +9,39 @@ datasource db {
 
 // User Table
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
-  points  Int @default(0)
+  id     Int    @id @default(autoincrement())
+  name   String
+  email  String @unique
+  points Int    @default(0)
+}
+
+// Supplier Table
+model Supplier {
+  id      Int       @id @default(autoincrement())
+  name    String
+  product Product[]
+  stocks  Stock[]
+}
+
+// Product Table
+model Product {
+  id         Int     @id @default(autoincrement())
+  name       String
+  price      Int
+  supplierId Int
+  stock      Stock[]
+
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+}
+
+// Stock Table
+model Stock {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  supplierId Int
+  quantity   Int
+  createdAt  DateTime @default(now())
+
+  product  Product  @relation(fields: [productId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
 }
