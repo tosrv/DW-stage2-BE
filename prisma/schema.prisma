@@ -17,10 +17,13 @@ model User {
 
 // Supplier Table
 model Supplier {
-  id      Int       @id @default(autoincrement())
-  name    String
-  product Product[]
-  stocks  Stock[]
+  id       Int       @id @default(autoincrement())
+  name     String?
+  email    String    @unique
+  password String
+  role     String    @default("supplier")
+  product  Product[]
+  stocks   Stock[]
 }
 
 // Product Table

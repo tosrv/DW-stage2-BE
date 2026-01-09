@@ -33,60 +33,60 @@ async function main() {
       });
 
       // Seed suppliers
-      const doe = await tx.supplier.create({ data: { name: "Doe Inc" } });
-      const vista = await tx.supplier.create({ data: { name: "Vista Inc" } });
+      // const doe = await tx.supplier.create({ data: { name: "Doe Inc" } });
+      // const vista = await tx.supplier.create({ data: { name: "Vista Inc" } });
 
       // Seed products and associate them with suppliers
-      const mouse = await tx.product.create({
-        data: {
-          name: "Mouse",
-          price: 50000,
-          supplierId: doe.id,
-        },
-      });
+      // const mouse = await tx.product.create({
+      //   data: {
+      //     name: "Mouse",
+      //     price: 50000,
+      //     supplierId: doe.id,
+      //   },
+      // });
 
-      const keyboard = await tx.product.create({
-        data: {
-          name: "Keyboard",
-          price: 300000,
-          supplierId: doe.id,
-        },
-      });
+      // const keyboard = await tx.product.create({
+      //   data: {
+      //     name: "Keyboard",
+      //     price: 300000,
+      //     supplierId: doe.id,
+      //   },
+      // });
 
-      const webcam = await tx.product.create({
-        data: {
-          name: "Webcam",
-          price: 300000,
-          supplierId: doe.id,
-        },
-      });
+      // const webcam = await tx.product.create({
+      //   data: {
+      //     name: "Webcam",
+      //     price: 300000,
+      //     supplierId: doe.id,
+      //   },
+      // });
 
-      const monitor = await tx.product.create({
-        data: {
-          name: "Monitor",
-          price: 2000000,
-          supplierId: vista.id,
-        },
-      });
+      // const monitor = await tx.product.create({
+      //   data: {
+      //     name: "Monitor",
+      //     price: 2000000,
+      //     supplierId: vista.id,
+      //   },
+      // });
 
-      const laptop = await tx.product.create({
-        data: {
-          name: "Laptop",
-          price: 5000000,
-          supplierId: vista.id,
-        },
-      });
+      // const laptop = await tx.product.create({
+      //   data: {
+      //     name: "Laptop",
+      //     price: 5000000,
+      //     supplierId: vista.id,
+      //   },
+      // });
 
       // Seed initial stock for each product using batch queries
-      await tx.stock.createMany({
-        data: [
-          { productId: mouse.id, supplierId: doe.id, quantity: 5 },
-          { productId: keyboard.id, supplierId: doe.id, quantity: 5 },
-          { productId: webcam.id, supplierId: doe.id, quantity: 5 },
-          { productId: monitor.id, supplierId: vista.id, quantity: 10 },
-          { productId: laptop.id, supplierId: vista.id, quantity: 10 },
-        ],
-      });
+      // await tx.stock.createMany({
+      //   data: [
+      //     { productId: mouse.id, supplierId: doe.id, quantity: 5 },
+      //     { productId: keyboard.id, supplierId: doe.id, quantity: 5 },
+      //     { productId: webcam.id, supplierId: doe.id, quantity: 5 },
+      //     { productId: monitor.id, supplierId: vista.id, quantity: 10 },
+      //     { productId: laptop.id, supplierId: vista.id, quantity: 10 },
+      //   ],
+      // });
     });
 
     console.log("Seed success");

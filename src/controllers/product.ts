@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../prisma/client";
 import AppError from "../utils/app-error";
+import { productSchema } from "../validation/product";
 
 // Display All Products
 export const getAllProducts = async (req: Request, res: Response) => {
@@ -9,6 +10,18 @@ export const getAllProducts = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Display all products", data: products });
   } catch (error) {
     res.status(500).json({ error: "Failed to get all products" });
+  }
+};
+
+export const supplierProducts = async (req: Request, res: Response) => {
+  try {
+    const supplierId = (req as any).user.id;
+    const products = await prisma.product.findMany({
+      where: { supplierId: supplierId },
+    });
+    res.status(200).json({ message: "Supplier products", data: products });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get products" });
   }
 };
 
@@ -59,16 +72,15 @@ export const createProduct = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, price, supplierId } = req.body;
-
   try {
     // Validate input
-    if (!name) throw new AppError(400, "Product name is required");
-    if (price === undefined || price === null)
-      throw new AppError(400, "Product price is required");
-    if (supplierId === undefined || supplierId === null)
-      throw new AppError(400, "Supplier ID is required");
+    const { value, error } = productSchema.validate(req.body);
+    if (error) throw new AppError(400, error.message);
 
+    const supplierId = (req as any).user.id;
+    const { name, price } = value;
+
+    // Create new product
     const newProduct = await prisma.product.create({
       data: { name, price, supplierId },
     });
