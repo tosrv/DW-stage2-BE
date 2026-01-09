@@ -30,57 +30,57 @@ export const updateStock = async (
 ) => {
   const { stocks } = req.body;
 
-  try {
-    // Validate stocks is not empty
-    if (!Array.isArray(stocks) || stocks.length === 0)
-      throw new AppError(400, "Stocks must be non-empty array");
+  // Validate stocks is not empty
+  if (!Array.isArray(stocks) || stocks.length === 0)
+    return next(new AppError(400, "Stocks must be non-empty array"));
 
-    for (const s of stocks) {
+  const success: any[] = [];
+  const failed: any[] = [];
+
+  for (const item of stocks) {
+    try {
       if (
-        typeof s.productId !== "number" ||
-        typeof s.supplierId !== "number" ||
-        typeof s.quantity !== "number" ||
-        s.quantity <= 0
+        typeof item.productId !== "number" ||
+        typeof item.supplierId !== "number" ||
+        typeof item.quantity !== "number" ||
+        item.quantity <= 0
       )
-        throw new AppError(400, "Invalid stock payload");
+        throw new Error("Invalid stock payload");
+
+      // Validate product ownership
+      const product = await prisma.product.findFirst({
+        where: {
+          id: item.productId,
+          supplierId: item.supplierId,
+        },
+      });
+
+      if (!product) throw Error("Product not owned by supplier");
+
+      // Batch update
+      await prisma.stock.updateMany({
+        where: {
+          productId: item.productId,
+          supplierId: item.supplierId,
+        },
+        data: {
+          quantity: {
+            increment: item.quantity,
+          },
+        },
+      });
+
+      success.push(item);
+    } catch (err: any) {
+      failed.push({
+        item,
+        failed: err.message,
+      });
     }
-
-    // Validate product ownership
-    const productSupplierPairs = stocks.map((s) => ({
-      id: s.productId,
-      supplierId: s.supplierId,
-    }));
-
-    const validProducts = await prisma.product.findMany({
-      where: { OR: productSupplierPairs },
-      select: { id: true, supplierId: true },
-    });
-
-    if (validProducts.length !== stocks.length)
-      throw new AppError(
-        400,
-        "One or more products do not belong to the given supplier"
-      );
-
-    // Batch update
-    await prisma.$transaction(
-      stocks.map((item: any) =>
-        prisma.stock.updateMany({
-          where: {
-            productId: item.productId,
-            supplierId: item.supplierId,
-          },
-          data: {
-            quantity: {
-              increment: item.quantity,
-            },
-          },
-        })
-      )
-    );
-
-    res.status(200).json({ message: "Batch stock update success" });
-  } catch (err) {
-    next(err);
   }
+  res.status(200).json({
+    message: "Batch stock update finished",
+    success: success.length,
+    failed: failed.length,
+  });
 };
