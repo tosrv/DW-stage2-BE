@@ -82,5 +82,6 @@ export const updateStock = async (
     message: "Batch stock update finished",
     success: success.length,
     failed: failed.length,
+    errorMessages: failed.map(f => f.failed)
   });
 };
